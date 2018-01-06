@@ -1,0 +1,134 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/vue"></script>
+  </head>
+  <body>
+    <div id="vision-list">
+      <div class="player" v-for="player in players">
+        <div>{{ player.name}}</div>
+        <div class="base-stat achieve"><div class="name">Achieve</div><div class="value">{{ player.achieve }} ({{player.GetCurrentStats().achieve}})</div></div>
+        <div class="base-stat achieve"><div class="name">Explore</div><div class="value">{{ player.explore }} ({{player.GetCurrentStats().explore}})</div></div>
+        <div class="base-stat achieve"><div class="name">Socialize</div><div class="value">{{ player.socialize }} ({{player.GetCurrentStats().socialize}})</div></div>
+        <div class="base-stat achieve"><div class="name">Grief</div><div class="value">{{ player.grief }} ({{player.GetCurrentStats().grief}})</div></div>
+        <div class="grief" v-for="grief in player.griefs">
+          <div class="title">{{grief.vision.name}}</div>
+          <div class="damage" >
+           {{ grief.CurrentLevel().name}} : {{ grief.progress % grief.scale}}
+          </div>
+        <button @click="grief.TakeDamage(1)">DAMAGE</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+
+
+  var visions = [];
+  var players = [];
+
+  var denial = {
+    name: "denial",
+    achieve: 0,
+    explore: 0,
+    socialize: 0,
+    grief: 0,
+  }
+
+  var anger = {
+    name: "anger",
+    achieve: 1,
+    explore: -1,
+    socialize: -1,
+    grief: 1,
+  }
+
+  var bargaining = {
+    name: "bargaining",
+    achieve: 1,
+    explore: -1,
+    socialize: 1,
+    grief: -1,
+  }
+
+  var depression = {
+    name: "depression",
+    achieve: -1,
+    explore: 2,
+    socialize: -1,
+    grief: -1,
+  }
+
+  var defaultStages = [denial, denial, anger, bargaining, depression, depression];
+
+  function Vision(name, scale){
+    this.name = name;
+    this.scale = scale;
+    this.progress = 0;
+    visions.push(this);
+  }
+
+  function Grief(vision){
+    this.vision = vision;
+    this.scale = vision.scale;
+    this.stages = defaultStages;
+    this.progress = 0;
+  }
+
+  Grief.prototype = {
+    TakeDamage: function(amount){
+      this.progress = Math.min(this.progress + amount, this.scale * this.stages.length);
+    },
+    CurrentLevel: function(){
+      var levelIndex = Math.floor(this.progress / this.scale);
+      return this.stages[levelIndex];
+    }
+  }
+
+  function Player(name){
+    this.name = name;
+    this.griefs = [];
+    this.achieve = 0;
+    this.explore = 0;
+    this.socialize = 0;
+    this.grief = 0;
+    players.push(this);
+  }
+  Player.prototype = {
+    AddVision: function(vision){
+      var newGrief = new Grief(vision);
+      this.griefs.push(newGrief);
+    },
+    GetCurrentStats: function(){
+      var modStats = {
+        "achieve" : this.achieve,
+        "explore" : this.explore,
+        "socialize" : this.socialize,
+        "grief" : this.grief
+      }
+
+      for (griefKey in this.griefs){
+        var currentGrief = this.griefs[griefKey].CurrentLevel();
+        console.log(currentGrief);
+        modStats.achieve += currentGrief.achieve;
+        modStats.explore += currentGrief.explore;
+        modStats.socialize += currentGrief.socialize;
+        modStats.grief += currentGrief.grief;
+      }
+      return modStats;
+    }
+  }
+
+  var playerOne = new Player("Steve");
+  playerOne.AddVision(new Vision("Get Tacos", 10));
+
+  var app = new Vue({
+    el: "#vision-list",
+    data: {
+      visions: visions,
+      players: players
+    },
+
+  })
+</script>
