@@ -1,0 +1,91 @@
+<div class="characters">
+  <div class="character" v-for="character in characters">
+    <div class="info-section">
+      <div class="section-label">Character Info</div>
+
+      <div class="name"><div class="label">Character Name</div><div class="value">{{character.name}}</div></div>
+    </div>
+    <div class="stat-section">
+      <div class="section-label">
+        Base Stats
+      </div>
+      <div class="value">
+        <div class="base-stat"><div class="label">Achieve</div>
+          <div class="value">{{ character.achieve }}</div>
+          <div class="mod-value">{{character.GetCurrentStats().achieve}}</div>
+          <button class="roll-button" @click="character.Roll(character.GetCurrentStats().achieve)">roll</button>
+        </div>
+        <div class="base-stat">
+          <div class="label">Explore</div>
+          <div class="value">{{ character.explore }}</div>
+          <div class="mod-value">{{character.GetCurrentStats().explore}}</div>
+          <button class="roll-button" @click="character.Roll(character.GetCurrentStats().explore)">roll</button>
+        </div>
+        <div class="base-stat">
+          <div class="label">Socialize</div>
+          <div class="value">{{ character.socialize }}</div>
+          <div class="mod-value">{{character.GetCurrentStats().socialize}}</div>
+          <button class="roll-button" @click="character.Roll(character.GetCurrentStats().socialize)">roll</button>
+        </div>
+        <div class="base-stat">
+          <div class="label">Grief</div>
+          <div class="value">{{ character.grief }}</div>
+          <div class="mod-value">{{character.GetCurrentStats().grief}}</div>
+          <button class="roll-button" @click="character.Roll(character.GetCurrentStats().grief)">roll</button>
+        </div>
+      </div>
+    </div>
+    <div class="grief-section">
+      <div class="section-label">Visions & Grief</div>
+
+
+        <div class="grief" v-for="grief in character.griefs">
+          <div class="title">s
+            <div class="label">Vision</div>
+            <div class="value">{{grief.vision.name}}</div>
+          </div>
+          <div class="level-name">
+            <div class="label">Grief Stage</div>
+            <div class="value">{{ grief.CurrentStage().name.toUpperCase()}}</div>
+          </div>
+          <button class="damage-button" @click="grief.TakeDamage(1)">DAMAGE</button>
+
+          <div class="level-damage">
+            <div class="label">Grief Damage</div>
+            <div class="value">
+              <span class="damage-bullet skull">💀</span>
+              <span class="damage-bullet unfilled" v-for="i in ( grief.CurrentScale() - grief.stageDamage ) - 1" ></span>
+              <span class="damage-bullet" v-for="i in ( grief.stageDamage )" ></span>
+            </div>
+          </div>
+
+          <div class="progress">
+            <div class="label">Progress</div>
+            <div class="value">
+              <span class="damage-bullet skull">💀</span>
+              <span class="damage-bullet unfilled" v-for="i in grief.vision.progress" ></span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="grief add-grief">
+          <div class="title">
+            <div class="label">Vision</div>
+            <input class="value" v-model="character.editGrief.name">
+          </div>
+          <div class="scale">
+            <div class="label">Vision Scale</div>
+            <input class="value" v-model="character.editGrief.scale"/>
+          </div>
+
+          <button class="add-button"
+          v-if="character.editGrief.name != ''"
+           @click="AddGriefVision(character)">Submit</button>
+          <div class="label add-button" v-else>Enter a new name to create a new vision.</div>
+        </div>
+      </div>
+    </div>
+    <div class="moves-section">
+    </div>
+  </div>

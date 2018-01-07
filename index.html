@@ -1,35 +1,49 @@
 <html>
   <head>
     <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <style>
-      .players{
+      .characters{
         display: flex;
       }
 
-      .player{
+      .character{
         flex: 1;
         display: grid;
-        grid-template-columns: repeat(8, 1fr);
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-areas: "name name info stats"
+                             "grief grief grief grief";
       }
 
-      .player .name{
-        grid-column-start: 1;
-        grid-column-end: span 2;
+      .character .name{
+        grid-area: name;
       }
 
-
-
-      .base-stat.name {
-        grid-column-end: span 2;
+      .stat-section {
+        grid-area: stats;
+      }
+      .stat-section .value {
+        display: flex;
+        flex-wrap: wrap;
       }
 
       .base-stat{
         display: grid;
-        grid-template-columns: repeat(4, 1fr)
+        grid-template-columns: 3fr 1fr 1fr 1fr;
+        min-width: 120px;
+      }
+      .base-stat .label{
+        flex: 3;
+      }
+      .base-stat .value, .mod-value{
+        flex: 1;
       }
 
+
+
       .grief-section{
-        grid-column-end: span 8;
+        grid-area: grief;
       }
       .grief-list{
         display: flex;
@@ -44,8 +58,11 @@
         display: grid;
         background-color: #eee;
         border: 1px solid black;
-        grid-template-areas: "info info stage stage control control"
-                             "description description description damage damage damage";
+        grid-template-areas:
+        "info info info info stage stage"
+        "damage damage damage damage control control"
+        "progress progress progress progress add-progress add-progress";
+
         grid-template-columns: repeat(6, 1fr);
         margin: 1mm;
         padding: 1mm;
@@ -55,7 +72,22 @@
 
       }
 
-      .grief .title, .grief .level-name, .grief .level-damage, .grief .description{
+      .grief.add-grief{
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-areas: "info info info scale control";
+
+      }
+      .grief.add-grief .scale{
+        grid-area: scale;
+      }
+      .grief.add-grief .value{
+        width: 100%;
+      }
+      .grief.add-grief .add-button{
+        grid-area: control;
+      }
+      .grief .title, .grief .level-name, .grief .level-damage,
+       .grief .description, .grief .scale, .grief .progress{
         border: 1px solid #aaa;;
         background-color: #fff;
         padding: 1mm;
@@ -71,13 +103,21 @@
         grid-area: stage;
 
       }
+      .grief .progress{
+        grid-area: progress;
+      }
+      .grief .progress-button{
+        grid-area: progress-button;
+      }
       .grief .damage-button{
         grid-area: control;
       }
       .level-damage{
+        grid-area: damage;
+      }
+      .level-damage .value{
         display: flex;
         flex-wrap: wrap;
-        grid-area: damage;
         background-color: #FFF;
         justify-content: start;
       }
@@ -92,53 +132,35 @@
         border: 2px solid;
       }
 
+      .damage-bullet.skull{
+        border: 0px;
+        background-color: #fff;
+        text-align: top;
+      }
       .damage-bullet.unfilled{
         background-color: #AAA;
         border: 2px dotted;
       }
 
-      .section-label{
+
+      .grief.progress{
+        grid-area: progress;
+      }
+      .section-label, .label{
         font-variant: small-caps;
+        font-size: 5mm;
+
+      }
+
+      .label{
         font-size: 4mm;
       }
 
     </style>
   </head>
   <body>
-    <div id="vision-list">
-      <div class="players">
-        <div class="player" v-for="player in players">
-          <div class="name">{{ player.name}}</div>
-          <div class="base-stat"><div class="name">Achieve</div>
-          <div class="value">{{ player.achieve }}</div><div class="mod-value">({{player.GetCurrentStats().achieve}})</div>
-          </div>
-          <div class="base-stat"><div class="name">Explore</div>
-            <div class="value">{{ player.explore }}</div>
-            <div class="mod-value">({{player.GetCurrentStats().explore}})</div>
-          </div>
-          <div class="base-stat"><div class="name">Socialize</div>
-            <div class="value">{{ player.socialize }}</div>
-            <div class="mod-value">({{player.GetCurrentStats().socialize}})</div>
-          </div>
-          <div class="base-stat"><div class="name">Grief</div><div class="value">{{ player.grief }} ({{player.GetCurrentStats().grief}})</div></div>
-          <div class="grief-section">
-            <div class="section-label">Visions & Grief</div>
-              <div class="grief-list">
-              <div class="grief" v-for="grief in player.griefs">
-                <div class="title">{{grief.vision.name}}</div>
-                <div class="description">{{grief.vision.description}}</div>
-                <div class="level-name">{{ grief.CurrentStage().name.toUpperCase()}}</div>
-                <button class="damage-button" @click="grief.TakeDamage(1)">DAMAGE</button>
+    <div id="app">
 
-                <div class="level-damage">
-                  <span class="damage-bullet unfilled" v-for="i in ( grief.CurrentScale() - grief.stageDamage ) - 1" ></span>
-                  <span class="damage-bullet" v-for="i in ( grief.stageDamage )" ></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </body>
 </html>
@@ -147,7 +169,7 @@
 
 
   var visions = [];
-  var players = [];
+  var characters = [];
 
   var denial = {
     name: "denial",
@@ -185,13 +207,14 @@
     grief: -1,
   }
 
+
+
   var defaultStages = [denial, anger, bargaining, depression];
 
   function Vision(name, scale){
     this.name = name;
     this.scale = scale;
     this.progress = 0;
-    this.description = "!!";
     visions.push(this);
   }
 
@@ -219,6 +242,10 @@
     CurrentScale: function(){
       return this.scale * this.CurrentStage().scale;
     },
+    Reset: function(){
+      this.stageDamage = 0;
+      this.stageIndex = 0;
+    },
     BreakStage: function(){
       if (this.stageIndex + 1< this.stages.length){
         this.stageIndex++;
@@ -230,16 +257,23 @@
     }
   }
 
-  function Player(name){
+  function Character(name){
     this.name = name;
     this.griefs = [];
     this.achieve = 0;
     this.explore = 0;
     this.socialize = 0;
     this.grief = 0;
-    players.push(this);
+
+    this.editGrief = {
+      name: "",
+      description: "",
+      scale: 1,
+    }
+
+    characters.push(this);
   }
-  Player.prototype = {
+  Character.prototype = {
     AddVision: function(vision){
       var newGrief = new Grief(vision);
       this.griefs.push(newGrief);
@@ -261,19 +295,51 @@
         modStats.grief += currentGrief.grief;
       }
       return modStats;
+    },
+    Roll: function(mod){
+      var roll = Math.random() * 6 + Math.random() * 6 + mod;
+      roll = Math.ceil(roll);
+      alert(roll);
+
+
     }
   }
 
-  var playerOne = new Player("Steve");
-  playerOne.AddVision(new Vision("Get Tacos", 3));
-  playerOne.AddVision(new Vision("Get Hyper Tacos", 10));
+  var characterOne = new Character("Hal");
 
-  var app = new Vue({
-    el: "#vision-list",
-    data: {
-      visions: visions,
-      players: players
-    },
+  $.ajax({url: "./playerView.html", success: function(result){
+      CreateVue("#app", result);
+  }});
+  /*
+  $.ajax({
+    dataType: "json",
+    url: url,
+    data: data,
+    success: success
+  });*/
 
-  })
+
+  function CreateVue(elName, template){
+    var app = new Vue({
+      el: elName,
+      template: template,
+      data: {
+        visions: visions,
+        characters: characters,
+      },
+      methods: {
+        AddGriefVision(character){
+          var vision = new Vision(character.editGrief.name, character.editGrief.scale);
+          //vision.description = character.editGrief.description;
+          character.AddVision(vision);
+          character.editGrief.name = "";
+          character.editGrief.description = "";
+          character.editGrief.scale = 1;
+        }
+      }
+
+    })
+    return app;
+  }
+
 </script>
