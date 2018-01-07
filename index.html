@@ -160,18 +160,22 @@
   }});
 
   var moves = [];
-  $.ajax({
-    dataType: "json",
-    url: "./data/moves.json",
-    complete: function(result){
-      var loadedMoves = JSON.parse(result.responseText).basic_moves;
-      for (moveKey in loadedMoves){
-        moves.push(loadedMoves[moveKey]);
-      }
-      console.log(moves);
+  if(!localStorage.getItem('moves')) {
+    $.ajax({
+      dataType: "json",
+      url: "./data/moves.json",
+      complete: function(result){
+        var loadedMoves = JSON.parse(result.responseText).basic_moves;
+        for (moveKey in loadedMoves){
+          moves.push(loadedMoves[moveKey]);
+        }
+        console.log(moves);
 
-    }
-  });
+      }
+    });
+  } else {
+    moves = JSON.parse(localStorage.getItem('moves'));
+  }
 
   function CreateVue(elName, template){
     var app = new Vue({
@@ -180,7 +184,9 @@
       data: {
         visions: visions,
         characters: characters,
-        moves: moves
+        moves: moves,
+        show_moves: false,
+        edit_mode: false,
       },
       methods: {
         AddGriefVision(character){
@@ -190,6 +196,10 @@
           character.editGrief.name = "";
           character.editGrief.description = "";
           character.editGrief.scale = 1;
+
+        },
+        Save(){
+          localStorage.setItem('moves', JSON.stringify(this.moves));
         }
       }
 
