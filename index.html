@@ -3,160 +3,7 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <style>
-      .characters{
-        display: flex;
-      }
-
-      .character{
-        flex: 1;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-areas: "name name info stats"
-                             "grief grief grief grief";
-      }
-
-      .character .name{
-        grid-area: name;
-      }
-
-      .stat-section {
-        grid-area: stats;
-      }
-      .stat-section .value {
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .base-stat{
-        display: grid;
-        grid-template-columns: 3fr 1fr 1fr 1fr;
-        min-width: 120px;
-      }
-      .base-stat .label{
-        flex: 3;
-      }
-      .base-stat .value, .mod-value{
-        flex: 1;
-      }
-
-
-
-      .grief-section{
-        grid-area: grief;
-      }
-      .grief-list{
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .grief-list .grief {
-        flex: 1;
-        display: grid;
-      }
-
-      .grief{
-        display: grid;
-        background-color: #eee;
-        border: 1px solid black;
-        grid-template-areas:
-        "info info info info stage stage"
-        "damage damage damage damage control control"
-        "progress progress progress progress add-progress add-progress";
-
-        grid-template-columns: repeat(6, 1fr);
-        margin: 1mm;
-        padding: 1mm;
-        grid-row-gap: 1mm;
-        grid-column-gap: 1mm;
-        min-width: 400px;
-
-      }
-
-      .grief.add-grief{
-        grid-template-columns: repeat(5, 1fr);
-        grid-template-areas: "info info info scale control";
-
-      }
-      .grief.add-grief .scale{
-        grid-area: scale;
-      }
-      .grief.add-grief .value{
-        width: 100%;
-      }
-      .grief.add-grief .add-button{
-        grid-area: control;
-      }
-      .grief .title, .grief .level-name, .grief .level-damage,
-       .grief .description, .grief .scale, .grief .progress{
-        border: 1px solid #aaa;;
-        background-color: #fff;
-        padding: 1mm;
-      }
-      .grief .title{
-        grid-area: info;
-      }
-
-      .grief .description{
-        grid-area: description;
-      }
-      .grief .level-name{
-        grid-area: stage;
-
-      }
-      .grief .progress{
-        grid-area: progress;
-      }
-      .grief .progress-button{
-        grid-area: progress-button;
-      }
-      .grief .damage-button{
-        grid-area: control;
-      }
-      .level-damage{
-        grid-area: damage;
-      }
-      .level-damage .value{
-        display: flex;
-        flex-wrap: wrap;
-        background-color: #FFF;
-        justify-content: start;
-      }
-
-      .damage-bullet{
-        width: 1em;
-        height: 1em;
-        border-radius: 50%;
-        margin:2px;
-        background-color: #000000;
-        border-color: #550000;
-        border: 2px solid;
-      }
-
-      .damage-bullet.skull{
-        border: 0px;
-        background-color: #fff;
-        text-align: top;
-      }
-      .damage-bullet.unfilled{
-        background-color: #AAA;
-        border: 2px dotted;
-      }
-
-
-      .grief.progress{
-        grid-area: progress;
-      }
-      .section-label, .label{
-        font-variant: small-caps;
-        font-size: 5mm;
-
-      }
-
-      .label{
-        font-size: 4mm;
-      }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
   </head>
   <body>
     <div id="app">
@@ -307,17 +154,24 @@
 
   var characterOne = new Character("Hal");
 
-  $.ajax({url: "./playerView.html", success: function(result){
-      CreateVue("#app", result);
+
+  $.ajax({url: "./templates/playerView.html", success: function(result){
+      var vue = CreateVue("#app", result);
   }});
-  /*
+
+  var moves = [];
   $.ajax({
     dataType: "json",
-    url: url,
-    data: data,
-    success: success
-  });*/
+    url: "./data/moves.json",
+    complete: function(result){
+      var loadedMoves = JSON.parse(result.responseText).basic_moves;
+      for (moveKey in loadedMoves){
+        moves.push(loadedMoves[moveKey]);
+      }
+      console.log(moves);
 
+    }
+  });
 
   function CreateVue(elName, template){
     var app = new Vue({
@@ -326,6 +180,7 @@
       data: {
         visions: visions,
         characters: characters,
+        moves: moves
       },
       methods: {
         AddGriefVision(character){

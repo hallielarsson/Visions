@@ -37,20 +37,18 @@
     </div>
     <div class="grief-section">
       <div class="section-label">Visions & Grief</div>
-
-
-        <div class="grief" v-for="grief in character.griefs">
-          <div class="title">s
+      <div class="grief" v-for="grief in character.griefs">
+          <div class="title stat-box">
             <div class="label">Vision</div>
             <div class="value">{{grief.vision.name}}</div>
           </div>
-          <div class="level-name">
+          <div class="level-name stat-box">
             <div class="label">Grief Stage</div>
             <div class="value">{{ grief.CurrentStage().name.toUpperCase()}}</div>
           </div>
           <button class="damage-button" @click="grief.TakeDamage(1)">DAMAGE</button>
 
-          <div class="level-damage">
+          <div class="level-damage stat-box">
             <div class="label">Grief Damage</div>
             <div class="value">
               <span class="damage-bullet skull">💀</span>
@@ -59,7 +57,7 @@
             </div>
           </div>
 
-          <div class="progress">
+          <div class="progress stat-box">
             <div class="label">Progress</div>
             <div class="value">
               <span class="damage-bullet skull">💀</span>
@@ -67,14 +65,12 @@
             </div>
           </div>
         </div>
-
-
-        <div class="grief add-grief">
-          <div class="title">
+      <div class="grief add-grief">
+          <div class="title stat-box">
             <div class="label">Vision</div>
             <input class="value" v-model="character.editGrief.name">
           </div>
-          <div class="scale">
+          <div class="scale stat-box">
             <div class="label">Vision Scale</div>
             <input class="value" v-model="character.editGrief.scale"/>
           </div>
@@ -84,8 +80,38 @@
            @click="AddGriefVision(character)">Submit</button>
           <div class="label add-button" v-else>Enter a new name to create a new vision.</div>
         </div>
+    </div>
+
+    <div class="moves-section">
+      <div class="moves-list">
+        <div class="stat-section move" v-for="move in moves">
+          <div class="name stat-box">
+            <div class="label">Move Name</div>
+            <div class="value">{{ move.name }}</div>
+          </div>
+          <div class="roll stat stat-box">
+            <div class="label">Roll</div>
+            <div class="value">{{ move.primary_stat }}</div>
+          </div>
+          <div class="trigger stat-box">
+            <div class="label">Use This Move When...</div>
+            <div class="value">{{ move.trigger }}</div>
+          </div>
+          <div class="full-success stat-box">
+            <div class="label">Complete Success (10+)</div>
+            <div class="value">{{ move.full_success }}</div>
+          </div>
+          <div class="partial-success stat-box">
+            <div class="label">Partial Success (7-9)</div>
+            <div class="value">{{ move.partial_success }}</div>
+          </div>
+          <div v-if="move.failure != ''" class="failure stat-box">
+            <div class="label">Failure (&lt; 6)</div>
+            <div class="value">{{ move.failure }}</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="moves-section">
-    </div>
+
   </div>
+</div>

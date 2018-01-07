@@ -1,0 +1,192 @@
+body{
+  font-family: sans-serif;
+}
+
+.characters{
+  display: flex;
+}
+
+.character{
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas: "name name info stats"
+                       "grief grief grief grief"
+                       "moves moves moves moves";
+}
+
+.character .name{
+  grid-area: name;
+}
+
+.stat-section {
+  grid-area: stats;
+}
+.stat-section .value {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.base-stat{
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  min-width: 120px;
+}
+.base-stat .label{
+  flex: 3;
+}
+.base-stat .value, .mod-value{
+  flex: 1;
+}
+
+.grief-section{
+  grid-area: grief;
+}
+.grief-list{
+  display: flex;
+  flex-wrap: wrap;
+}
+.grief-list .grief {
+  flex: 1;
+  display: grid;
+}
+
+.grief{
+  display: grid;
+  background-color: #eee;
+  border: 1px solid black;
+  grid-template-areas:
+  "info info info info stage stage"
+  "damage damage damage damage control control"
+  "progress progress progress progress add-progress add-progress";
+
+  grid-template-columns: repeat(6, 1fr);
+  margin: 1mm;
+  padding: 1mm;
+  grid-row-gap: 1mm;
+  grid-column-gap: 1mm;
+  min-width: 400px;
+
+}
+
+.grief.add-grief{
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas: "info info info scale control";
+
+}
+.grief.add-grief .scale{
+  grid-area: scale;
+}
+.grief.add-grief .value{
+  width: 100%;
+}
+.grief.add-grief .add-button{
+  grid-area: control;
+}
+
+
+.grief .title{
+  grid-area: info;
+}
+
+.grief .description{
+  grid-area: description;
+}
+.grief .level-name{
+  grid-area: stage;
+
+}
+.grief .progress{
+  grid-area: progress;
+}
+.grief .progress-button{
+  grid-area: progress-button;
+}
+.grief .damage-button{
+  grid-area: control;
+}
+.level-damage{
+  grid-area: damage;
+}
+.level-damage .value{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #FFF;
+  justify-content: start;
+}
+
+.damage-bullet{
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  margin:2px;
+  background-color: #000000;
+  border-color: #550000;
+  border: 2px solid;
+}
+
+.damage-bullet.skull{
+  border: 0px;
+  background-color: #fff;
+  text-align: top;
+}
+.damage-bullet.unfilled{
+  background-color: #AAA;
+  border: 2px dotted;
+}
+
+
+.grief.progress{
+  grid-area: progress;
+}
+.section-label, .label{
+  font-variant: uppercase;
+  font-size: 5mm;
+
+}
+.label{
+  font-size: 4mm;
+  opacity: 0.8;
+  font-weight: bold;
+}
+
+.moves-section{
+  grid-area: moves;
+}
+
+.moves-list{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+
+}
+
+.moves-list .move{
+  flex: 1 1;
+  display: grid;
+  min-width:500px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr auto 2fr 2fr;
+  grid-template-areas:
+    "name name roll"
+    "trigger trigger roll"
+    "success success success"
+    "partial partial partial"
+    "fail fail fail";
+  background-color: #bbb;
+  padding: 0.5mm;
+  margin: 0.5mm;
+  justify-self: stretch;
+}
+ .move .stat-box, .grief .stat-box{
+   border: 1px solid #aaa;
+   padding: 1mm;
+   background-color: #fff;
+   justify-self: stretch;
+ }
+.move .name{ grid-area: name; }
+.move .trigger{ grid-area: trigger; }
+.move .roll{ grid-area: roll; }
+.move .full-success{ grid-area: success; }
+.move .partial-success{ grid-area: partial; }
+.move .failure{ grid-area: fail; }
