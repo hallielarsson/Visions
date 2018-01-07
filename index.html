@@ -1,21 +1,142 @@
 <html>
   <head>
     <script src="https://unpkg.com/vue"></script>
+    <style>
+      .players{
+        display: flex;
+      }
+
+      .player{
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+      }
+
+      .player .name{
+        grid-column-start: 1;
+        grid-column-end: span 2;
+      }
+
+
+
+      .base-stat.name {
+        grid-column-end: span 2;
+      }
+
+      .base-stat{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr)
+      }
+
+      .grief-section{
+        grid-column-end: span 8;
+      }
+      .grief-list{
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .grief-list .grief {
+        flex: 1;
+        display: grid;
+      }
+
+      .grief{
+        display: grid;
+        background-color: #eee;
+        border: 1px solid black;
+        grid-template-areas: "info info stage stage control control"
+                             "description description description damage damage damage";
+        grid-template-columns: repeat(6, 1fr);
+        margin: 1mm;
+        padding: 1mm;
+        grid-row-gap: 1mm;
+        grid-column-gap: 1mm;
+        min-width: 400px;
+
+      }
+
+      .grief .title, .grief .level-name, .grief .level-damage, .grief .description{
+        border: 1px solid #aaa;;
+        background-color: #fff;
+        padding: 1mm;
+      }
+      .grief .title{
+        grid-area: info;
+      }
+
+      .grief .description{
+        grid-area: description;
+      }
+      .grief .level-name{
+        grid-area: stage;
+
+      }
+      .grief .damage-button{
+        grid-area: control;
+      }
+      .level-damage{
+        display: flex;
+        flex-wrap: wrap;
+        grid-area: damage;
+        background-color: #FFF;
+        justify-content: start;
+      }
+
+      .damage-bullet{
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        margin:2px;
+        background-color: #000000;
+        border-color: #550000;
+        border: 2px solid;
+      }
+
+      .damage-bullet.unfilled{
+        background-color: #AAA;
+        border: 2px dotted;
+      }
+
+      .section-label{
+        font-variant: small-caps;
+        font-size: 4mm;
+      }
+
+    </style>
   </head>
   <body>
     <div id="vision-list">
-      <div class="player" v-for="player in players">
-        <div>{{ player.name}}</div>
-        <div class="base-stat achieve"><div class="name">Achieve</div><div class="value">{{ player.achieve }} ({{player.GetCurrentStats().achieve}})</div></div>
-        <div class="base-stat achieve"><div class="name">Explore</div><div class="value">{{ player.explore }} ({{player.GetCurrentStats().explore}})</div></div>
-        <div class="base-stat achieve"><div class="name">Socialize</div><div class="value">{{ player.socialize }} ({{player.GetCurrentStats().socialize}})</div></div>
-        <div class="base-stat achieve"><div class="name">Grief</div><div class="value">{{ player.grief }} ({{player.GetCurrentStats().grief}})</div></div>
-        <div class="grief" v-for="grief in player.griefs">
-          <div class="title">{{grief.vision.name}}</div>
-          <div class="damage" >
-           {{ grief.CurrentLevel().name}} : {{ grief.progress % grief.scale}}
+      <div class="players">
+        <div class="player" v-for="player in players">
+          <div class="name">{{ player.name}}</div>
+          <div class="base-stat"><div class="name">Achieve</div>
+          <div class="value">{{ player.achieve }}</div><div class="mod-value">({{player.GetCurrentStats().achieve}})</div>
           </div>
-        <button @click="grief.TakeDamage(1)">DAMAGE</button>
+          <div class="base-stat"><div class="name">Explore</div>
+            <div class="value">{{ player.explore }}</div>
+            <div class="mod-value">({{player.GetCurrentStats().explore}})</div>
+          </div>
+          <div class="base-stat"><div class="name">Socialize</div>
+            <div class="value">{{ player.socialize }}</div>
+            <div class="mod-value">({{player.GetCurrentStats().socialize}})</div>
+          </div>
+          <div class="base-stat"><div class="name">Grief</div><div class="value">{{ player.grief }} ({{player.GetCurrentStats().grief}})</div></div>
+          <div class="grief-section">
+            <div class="section-label">Visions & Grief</div>
+              <div class="grief-list">
+              <div class="grief" v-for="grief in player.griefs">
+                <div class="title">{{grief.vision.name}}</div>
+                <div class="description">{{grief.vision.description}}</div>
+                <div class="level-name">{{ grief.CurrentStage().name.toUpperCase()}}</div>
+                <button class="damage-button" @click="grief.TakeDamage(1)">DAMAGE</button>
+
+                <div class="level-damage">
+                  <span class="damage-bullet unfilled" v-for="i in ( grief.CurrentScale() - grief.stageDamage ) - 1" ></span>
+                  <span class="damage-bullet" v-for="i in ( grief.stageDamage )" ></span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -30,6 +151,7 @@
 
   var denial = {
     name: "denial",
+    scale: 2,
     achieve: 0,
     explore: 0,
     socialize: 0,
@@ -38,6 +160,7 @@
 
   var anger = {
     name: "anger",
+    scale: 1,
     achieve: 1,
     explore: -1,
     socialize: -1,
@@ -46,6 +169,7 @@
 
   var bargaining = {
     name: "bargaining",
+    scale: 1,
     achieve: 1,
     explore: -1,
     socialize: 1,
@@ -54,18 +178,20 @@
 
   var depression = {
     name: "depression",
+    scale: 2,
     achieve: -1,
     explore: 2,
     socialize: -1,
     grief: -1,
   }
 
-  var defaultStages = [denial, denial, anger, bargaining, depression, depression];
+  var defaultStages = [denial, anger, bargaining, depression];
 
   function Vision(name, scale){
     this.name = name;
     this.scale = scale;
     this.progress = 0;
+    this.description = "!!";
     visions.push(this);
   }
 
@@ -73,16 +199,34 @@
     this.vision = vision;
     this.scale = vision.scale;
     this.stages = defaultStages;
-    this.progress = 0;
+    this.stageIndex = 0;
+    this.stageDamage = 0;
   }
 
   Grief.prototype = {
     TakeDamage: function(amount){
-      this.progress = Math.min(this.progress + amount, this.scale * this.stages.length);
+      var totalAmount = amount;
+      while(amount > 0){
+        var currentDamage = Math.min(this.scale * this.CurrentStage().scale - this.stageDamage, amount);
+        this.stageDamage += currentDamage;
+        amount -= currentDamage;
+        amount = amount < 0? 0 : amount; //not sure we need this, but just in case
+        if(this.stageDamage >= this.scale * this.CurrentStage().scale) {
+          this.BreakStage();
+        }
+      }
     },
-    CurrentLevel: function(){
-      var levelIndex = Math.floor(this.progress / this.scale);
-      return this.stages[levelIndex];
+    CurrentScale: function(){
+      return this.scale * this.CurrentStage().scale;
+    },
+    BreakStage: function(){
+      if (this.stageIndex + 1< this.stages.length){
+        this.stageIndex++;
+      }
+      this.stageDamage = 0;
+    },
+    CurrentStage: function(){
+      return this.stages[this.stageIndex];
     }
   }
 
@@ -109,7 +253,7 @@
       }
 
       for (griefKey in this.griefs){
-        var currentGrief = this.griefs[griefKey].CurrentLevel();
+        var currentGrief = this.griefs[griefKey].CurrentStage();
         console.log(currentGrief);
         modStats.achieve += currentGrief.achieve;
         modStats.explore += currentGrief.explore;
@@ -121,7 +265,8 @@
   }
 
   var playerOne = new Player("Steve");
-  playerOne.AddVision(new Vision("Get Tacos", 10));
+  playerOne.AddVision(new Vision("Get Tacos", 3));
+  playerOne.AddVision(new Vision("Get Hyper Tacos", 10));
 
   var app = new Vue({
     el: "#vision-list",
