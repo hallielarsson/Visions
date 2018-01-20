@@ -87,41 +87,41 @@
         <span>Show Moves</span><input type="checkbox" v-model="show_moves"/>
         <span>Edit Moves</span><input type="checkbox" v-model="edit_mode"/>
         <button @click="Save()">Save Moves</button>
-      <div v-show="show_moves" class="moves-list">
-        <div class="stat-section move" v-for="move in moves">
-          <div class="name stat-box">
-            <div class="label">Move Name</div>
-            <input v-if="edit_mode" v-model="move.name"/>
-            <div class="value">{{ move.name }}</div>
-          </div>
-          <div class="roll stat stat-box">
-            <div class="label">Roll</div>
-            <input v-if="edit_mode" v-model="move.primary_stat"/>
-            <div v-else class="value">{{ move.primary_stat }}</div>
-          </div>
-          <div class="trigger stat-box">
-            <div class="label">Use This Move When...</div>
-            <textarea v-if="edit_mode" v-model="move.trigger"></textarea>
-            <div v-else class="value">{{ move.trigger }}</div>
-          </div>
-          <div class="full-success stat-box">
-            <div class="label">Complete Success (10+)</div>
-            <textarea v-if="edit_mode" v-model="move.full_success"></textarea>
-            <div v-else class="value"><span v-for="text in move.full_success.split('\n')">{{ text }}</span></div>
-          </div>
-          <div class="partial-success stat-box">
-            <div class="label">Partial Success (7-9)</div>
-            <textarea v-if="edit_mode" v-model="move.partial_success"></textarea>
-            <div v-else class="value"><span v-for="text in move.partial_success.split('\n')">{{ text }}</span></div>
-          </div>
-          <div v-if="move.failure != '' && !edit_mode" class="failure stat-box">
-            <div class="label">Failure (&lt; 6)</div>
-            <textarea v-if="edit_mode" v-model="move.failure"></textarea>
-            <div v-else class="value"><span v-for="text in move.failure.split('\n')">{{ text }}</span></div>
+        <div v-show="show_moves" class="moves-list">
+          <div class="stat-section move" v-for="move in moves">
+            <div class="name stat-box">
+              <div class="label">Move Name</div>
+              <input v-if="edit_mode" v-model="move.name"/>
+              <div class="value">{{ move.name }}</div>
+            </div>
+            <div class="roll stat stat-box">
+              <div class="label">Roll</div>
+              <input v-if="edit_mode" v-model="move.primary_stat"/>
+              <div v-else class="value">{{ move.primary_stat }}</div>
+            </div>
+            <div class="trigger stat-box">
+              <div class="label">Use This Move When...</div>
+              <textarea v-if="edit_mode" v-model="move.trigger"></textarea>
+              <div v-else class="value">{{ move.trigger }}</div>
+            </div>
+            <div class="full-success stat-box">
+              <div class="label">Complete Success (10+)</div>
+              <textarea v-if="edit_mode" v-model="move.full_success"></textarea>
+              <div v-else class="value"><span v-for="text in move.full_success.split('\n')">{{ text }}</span></div>
+            </div>
+            <div class="partial-success stat-box">
+              <div class="label">Partial Success (7-9)</div>
+              <textarea v-if="edit_mode" v-model="move.partial_success"></textarea>
+              <div v-else class="value"><span v-for="text in move.partial_success.split('\n')">{{ text }}</span></div>
+            </div>
+            <div v-if="move.failure != '' && !edit_mode" class="failure stat-box">
+              <div class="label">Failure (&lt; 6)</div>
+              <textarea v-if="edit_mode" v-model="move.failure"></textarea>
+              <div v-else class="value"><span v-for="text in move.failure.split('\n')">{{ text }}</span></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
-</div>
+</div>    

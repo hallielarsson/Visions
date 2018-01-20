@@ -1,0 +1,68 @@
+{
+  "basic_moves": [
+    {
+      "trigger": "You try to convince another character of some need or truth.",
+      "full_success": "The target is completely convinced, seeing the world as you do.\nShare a relevant one of your Visions with the target at Level 2.\nIf you do not have the relevant Vision, give the target a new Vision at level 1.",
+      "partial_success": "The target gains the Vision, but (Pick Two):\n* It's altered in some important way\n* The news is distressing, give them 2 grief\n* The target gives you a new level 1 Vision of their choice. \n* You need to provide concrete proof to bolster your argument.",
+      "failure": "",
+      "name": "Convincement",
+      "primary_stat": "Socialize"
+    },
+    {
+      "trigger": "You help someone else towards achieving their goal. ",
+      "full_success": "GIve the target +1 Forward to their next attempt to realize a Vision. If you both share the same Vision, they take +2 instead.",
+      "partial_success": "The target gains +1 Forward to their next attempt tor realize that Vision, but (Pick One):\n* You take 1d4 Grief to one of your Visions\n* The GM chooses a relevant Vision of theirs for you to take on at level 1\n* They take 1d4 Grief",
+      "failure": "",
+      "name": "Aid",
+      "primary_stat": "Socialize"
+    },
+    {
+      "trigger": "You question your assumptions while examining any information you have on hand. ",
+      "full_success": "You May (Pick Two):\n* Suspend a Vision (Turn it over, it no longer affects this session)\n* Reintroduce a Vision you had previously suspended\n* Create a level-1 Vision",
+      "partial_success": "Pick one from the list above, AND (pick two):\n* Take 1d4 Grief damage to a Vision\n* Spend a piece of Evidence (can use multiple times)\n* The GM gives you a level-1 Vision",
+      "failure": "",
+      "name": "Synthesize",
+      "primary_stat": "Explore"
+    },
+    {
+      "trigger": "You try to understand another person's Vision well enough to follow it yourself.",
+      "full_success": "Gain a level 1 copy of another player's Vision.",
+      "partial_success": "Same as above BUT (pick two):\n* The Vision is level 0\n* Take 1d4 Grief damage to a Vision\n* The Vision is altered in some key way",
+      "failure": "",
+      "name": "Empathize",
+      "primary_stat": "Socialize"
+    },
+    {
+      "trigger": "You work towards a goal despite opposition.",
+      "full_success": "You succeed wildly. \nMark progress on the relevant Vision and you may deal 1d4 Grief to a target who opposed you.",
+      "partial_success": "You succeed, but at a cost (Pick Two):\n* One of your Visions is set back (take 1d4 Grief damage to the relevant Vision).\n* You advance the Vision of someone or something you oppose.\n* Your results are not quite what you intended (reduced effect).",
+      "failure": "",
+      "name": "Strive",
+      "primary_stat": "Achieve"
+    },
+    {
+      "trigger": "You stand in opposition to a force trying to realize some Vision.",
+      "full_success": "You succeed in your opposition. Pick 2:\n* You deal 1d4 Grief.\n* You gain a level-1 Vision reflecting your opposition.\n* Gain 1 Hold. You may spend this to prevent an attempt to realize the opposed Vision.\n\n",
+      "partial_success": "You achieve your results, but at a cost. Pick one from the above list, AND (pick one):\n* You experience a frustrating setback. Take 1d4 Grief.\n* The GM gives you a level-0 Vision reflecting your opposition.\n",
+      "failure": "",
+      "name": "Resistance",
+      "primary_stat": "Grief"
+    },
+    {
+      "trigger": "You examine your immediate surroundings, looking for new information.",
+      "full_success": "Ask three questions from the following list. \n* What here can best help me achieve [specific vision]?\n* What here is the greatest threat to [specific vision]?\n* What here is worth taking with me?\n* What just happened here?\n* What will happen here soon?\n* Who or what owns this?\n* What am I ignoring that I shouldn't be?\n\nIn addition, you may either create 1 new level-1 Vision or take +1 Forward relating to the information at hand.",
+      "partial_success": "Same as above BUT (Pick two):\n* The answer to one of the questions is disheartening. Take 1d4 Grief.\n* Evidence is sparse. You can only ask one of the questions.\n* You are distracted by something immediately pressing. Create a new level-1 Vision.\n",
+      "failure": "",
+      "name": "Explore",
+      "primary_stat": "Explore"
+    },
+    {
+      "trigger": "Whenever you gain a Vision and you already have 3 Visions.",
+      "full_success": "The Vision aligns perfectly with your understanding of the world. Pick One:\n* Increase or decrease the level of the Vision by one without cost. If a Vision is decreased below 0, it is discarded.\n* Gain 1 Hold, you may spend this to negate one instance of Grief damage to this Vision.\n",
+      "partial_success": "You manage to understand the vision, but there is some consequence. Pick one:\n* This Vision challenges your existing beliefs: Take 1d4 Grief.\n* This Vision makes you forget something important: suspend one Vision until the end of the session.\n* The new Vision is fundamentally twisted. Some other player changes one word in the Vision description.",
+      "failure": "The belief is twisted somehow. ",
+      "name": "Care",
+      "primary_stat": "5+ The higher of Explore or Socialize, - Your current Vision count"
+    }
+  ]
+}
