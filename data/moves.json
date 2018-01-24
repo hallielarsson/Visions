@@ -92,6 +92,23 @@
     {
       "name" : "Acceptance",
       "trigger" : "Your character attempts to let go of one of their Values that has reached Depression."
-    }
+    },
+    {
+      "name" : "No Worries",
+      "trigger" : "One of your non-depressed Values with a resolved Vision on it takes Grief damage.",
+      "result" : "Either reduce that Grief Damage by 1 or negate the damage entirely and discard an attached, resolved Vision."
+    },
+    {
+      "name" : "Personal Crisis: Faith",
+      "trigger" : "You resist fatal Grief damage with prayer and submission to powers greater than your own.",
+      "primary_stat": "Achieve",      
+      "full_success" : "Your prayers are answered with a new sense of surety. Remove all tags and Grief from this Value. You may clarify the language to represent your newfound understanding, but you do not need to.",
+      "partial_success" : "You gain clarity, but questions still remain (Pick ONE):",
+      "partial_options": [
+        "Your new Value gains an grief state tag of your choice",
+        "The truths you believe threaten other pillars of your faith: deal 1d10 unblockable Grief to another Value",
+
+      ]
+    },
   ]
 }

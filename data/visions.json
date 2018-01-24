@@ -1,6 +1,9 @@
 {
   "visions" : [
     { "text" : "I escape _.", "tags" : [ "wands" ] },
+    { "text" : "I know what happened to _.", "tags" : [ "wands" ] },    
+    { "text" : "I know where to go next.", "tags" : [ "wands" ] },    
+    { "text" : "I understand how _ works.", "tags" : [ "wands" ] },    
 
     { "text" : "_ defeats _.", "tags" : [ "swords"] },
     { "text" : "_ humiliates _.", "tags" : [ "swords"] },
