@@ -135,35 +135,65 @@ Character.prototype = {
   }
 }
 
+function CharGenMachine(){
+
+}
+
+CharGenMachine.prototype = {
+  
+}
+
 var characterOne = new Character("Hal");
 
-$.ajax({url: "./templates/playerView.html", success: function(result){
-    var vue = CreateVue("#app", result);
-}});
-
 var moves = [];
-if(!localStorage.getItem('moves')) {
+reload = true;
+if(reload || !localStorage.getItem('moves')) {
   $.ajax({
     dataType: "json",
     url: "./data/moves.json",
     complete: function(result){
-      var loadedMoves = JSON.parse(result.responseText).basic_moves;
-      for (moveKey in loadedMoves){
-        moves.push(loadedMoves[moveKey]);
+      var movesets = JSON.parse(result.responseText);
+      for (moveKey in movesets.basic_moves){
+        moves.push(movesets.basic_moves[moveKey]);
       }
       console.log(moves);
 
     }
   });
 } else {
-  moves = JSON.parse(localStorage.getItem('moves'));
+  moves = [].appendJSON.parse(localStorage.getItem('moves'));
 }
 
-function CreateVue(elName, template){
+var view
+
+
+var templates = {
+  "main" : false,
+}
+var toLoadCount = Object.keys(templates).length;
+
+$.ajax({url: "./templates/playerView.html", success: function(result){
+    var vue = TemplateLoaded("main", result);
+}});
+
+
+function TemplateLoaded(name, template){
+  console.log(toLoadCount);
+  templates[name] = template;
+  toLoadCount --;
+  if (toLoadCount <= 0){
+    CreateVue("#app", templates);
+  }
+}
+
+function CreateVue(elName, templates){
   var app = new Vue({
     el: elName,
-    template: template,
+    template: templates.main,
     data: {
+      chargen: {
+
+      },
       visions: visions,
       characters: characters,
       moves: moves,
@@ -177,7 +207,7 @@ function CreateVue(elName, template){
         character.AddVision(vision);
         character.editGrief.name = "";
         character.editGrief.description = "";
-        character.editGrief.scale = 1;
+        character.editGrief.scale = 5;
 
       },
       Save(){

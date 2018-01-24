@@ -1,6 +1,20 @@
 {
-  Vision_Moves: [{
+  "visions" : [
+    { "text" : "I escape _.", "tags" : [ "wands" ] },
 
-  }]
+    { "text" : "_ defeats _.", "tags" : [ "swords"] },
+    { "text" : "_ humiliates _.", "tags" : [ "swords"] },
+    { "text" : "_ is my enemy.", "tags" : [ "swords"] },
+    { "text" : "_ does not deserve to have _.", "tags" : [ "swords"] },    
 
+    { "text": "_ is my ally.", "tags" : ["cups"]},
+    { "text": "_ has my interests at heart.", "tags" : ["cups"]},
+    { "text": "_ is safe and out of danger.", "tags" : ["cups"]},
+
+    { "text" : "I'm better at _ than _.", "tags" : ["coins"]},
+    { "text" : "_ is better than me at _.", "tags" : ["coins"]},
+    { "text" : "_ is an objective truth.", "tags" : ["coins"]},    
+    { "text" : "That _ belongs to me.", "tags" : ["coins"]},        
+    { "text": "A slight against _ must be punished.", "tags" : ["coins"]},
+  ]
 }
