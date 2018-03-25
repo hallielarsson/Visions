@@ -10,7 +10,7 @@
     },
     {
       "trigger": "You help someone else towards achieving their goal. ",
-      "full_success": "GIve the target +1 Forward to their next attempt to realize a Vision. If you both share the same Vision, they take +2 instead.",
+      "full_success": "Give the target +1 Forward to their next attempt to realize a Vision. If you both share the same Vision, they take +2 instead.",
       "partial_success": "The target gains +1 Forward to their next attempt tor realize that Vision, but (Pick One):\n* You take 1d4 Grief to one of your Visions\n* The GM chooses a relevant Vision of theirs for you to take on at level 1\n* They take 1d4 Grief",
       "failure": "",
       "name": "Aid",
